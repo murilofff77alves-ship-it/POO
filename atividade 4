@@ -1,0 +1,76 @@
+ATV 4
+using System;
+using System.Collections.Generic;
+
+namespace Atv4 {
+
+    public interface INotificavel
+    {
+        void EnviarMsg(string msg);
+    }
+
+    public class Email : INotificavel
+    {
+        public string EmailDestino { get; set;}
+
+        public void EnviarMsg(string msg)
+        {
+            Console.WriteLine($"[EMAIL] Para: {EmailDestino} | Conteudo: '{msg}'");
+        }
+    }
+
+    public class SMS : INotificavel
+    {
+        public string NumTelefone { get; set; }
+
+        public void EnviarMsg(string msg)
+        {
+            Console.WriteLine($"[SMS] Enviando para {NumTelefone}: '{msg}'");
+        }
+    }
+
+    public class PushNotification : INotificavel
+    {
+        public void EnviarMsg(string msg)
+        {
+            Console.WriteLine($"[PUSH] Notificacao no App; '{msg}'");
+        }
+    }
+
+    public class Usuario
+    {
+        public string Nome { get; set; }
+
+        public List<INotificavel> CanaisDeContato { get; set; } = new List<INotificavel>();
+
+        public void NotificarGeral(string aviso)
+        {
+            Console.WriteLine($"----Notificando {Nome}----");
+            foreach (var canal in CanaisDeContato)
+            {
+                canal.EnviarMsg(aviso);
+            }
+            Console.WriteLine("---------------------\n");
+        }
+    }
+    
+    class Program 
+    {
+        public static void Main(string[] args) 
+        {
+            //Configurar os Usuarios
+            Usuario user1 = new Usuario { Nome =  "Cefras Mandu"};
+            user1.CanaisDeContato.Add(new Email { EmailDestino = "cefras54@gmail.com"});
+            user1.CanaisDeContato.Add(new SMS { NumTelefone = "87-99959-8330"});
+
+            Usuario user2 = new Usuario { Nome = "Kaick"};
+            user2.CanaisDeContato.Add(new PushNotification());
+
+            //Disparo das notificacoes
+            user1.NotificarGeral("Seu pedido saiu para entrega!");
+            user2.NotificarGeral("Comecou o happy hour!");
+            
+            Console.ReadKey();
+        }
+    }
+}
