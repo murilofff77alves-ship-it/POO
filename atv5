@@ -1,0 +1,78 @@
+
+using System.Collections.Generic;
+
+namespace ATV5
+{
+    public class AcessoNegadoException : Exception
+    {
+        public AcessoNegadoException(string msg) : base(msg) {}
+    }
+
+    public class SistemaAuth
+    {
+        private Dictionary<string, string> bancoDeDados = new Dictionary<string, string>();
+    
+        public SistemaAuth()
+        {
+            bancoDeDados.Add("admin", "admin");
+            bancoDeDados.Add("Aluno", "gAluno123");
+            bancoDeDados.Add("Professor", "gProf456");
+        }
+
+        public void FazerLogin(string usuario, string senha)
+        {
+            if(!bancoDeDados.ContainsKey(usuario))
+            {
+                throw new AcessoNegadoException("Usuario nao cadastrado.");
+            }
+
+            if(bancoDeDados[usuario] != senha)
+            {
+                throw new AcessoNegadoException("Senha Invalida!");
+            }
+
+            Console.WriteLine($"[SUCESSO] Bem-vindo, {usuario}!");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            SistemaAuth sistema = new SistemaAuth();
+
+            Console.WriteLine("---TENTATIVA 1(Correta)---");
+            try
+            {
+                sistema.FazerLogin("admin", "admin");
+            }
+            catch (Exception ex) { Console.WriteLine("Erro: " + ex.Message);}
+
+            Console.WriteLine("\n---TENTATIVA 2(Senha Errada)---");
+            try
+            {
+                sistema.FazerLogin("Aluno", "Aluno@GrauT");
+            }
+            catch (AcessoNegadoException ex) 
+            { 
+                Console.WriteLine($"[ALERTA DE SEGURANÇA]{ex.Message}");
+            }
+
+            Console.WriteLine("\n---TENTATIVA 3(Usuario Inexistente)---");
+            try
+            {
+                sistema.FazerLogin("Edvaldo", "Edv@250");
+            }
+            catch (AcessoNegadoException ex) 
+            { 
+                Console.WriteLine($"[ERRO]{ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("\nProcesso de validacao finalizado.");
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
