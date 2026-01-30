@@ -1,0 +1,71 @@
+Código ATV3:
+
+using System;
+using System.Collections.Generic;
+
+namespace ATV3 
+{
+    public class Funcionario
+    {
+        public string Nome { get; set; }
+        public double Salario { get; set; }
+
+        public virtual double CalcularBonificacao()
+        {
+            return Salario * 0.10;
+        }
+    }
+    
+    public class Gerente : Funcionario
+    {
+        public override double CalcularBonificacao()
+        {
+            return base.CalcularBonificacao() + 500.00 + (Salario * 0.10);
+        }
+    }
+
+    public class Estagiario : Funcionario
+    {
+        public override double CalcularBonificacao()
+        {
+            return 100.00;
+        }
+    }
+
+    class Program {
+        public static void Main(string[] args) 
+        {
+            Console.WriteLine("=== SISTEMA DE RH - ATV3 ===\n");
+
+            List<Funcionario> folhaDePag = new List<Funcionario>();
+
+            Funcionario f1 = new Funcionario { Nome = "Cefras(Padrao)", Salario = 1518.00};
+            Gerente g1 = new Gerente { Nome = "Andre(Gerente)", Salario = 2518.00};
+            Estagiario e1 = new Estagiario { Nome = "Murilo(Estagiario)", Salario = 800.00};
+
+            folhaDePag.Add(f1);
+            folhaDePag.Add(g1);
+            folhaDePag.Add(e1);
+
+            double totalBonificacoes = 0;
+
+            foreach (var funcionario in folhaDePag)
+            {
+                double bonus = funcionario.CalcularBonificacao();
+                totalBonificacoes += bonus;
+
+                Console.WriteLine($"Funcionario: {funcionario.Nome}");
+                Console.WriteLine($"Salario Base: R$ {funcionario.Salario:F2}");    
+                Console.WriteLine($"Bonus Calculado: R$ {bonus:F2}");
+                Console.WriteLine("--------------------------------");
+
+                Console.WriteLine($"TOTAL PAGO EM BONUS: R$ {totalBonificacoes:F2}");
+                
+                Console.WriteLine("--------------------------------");
+            }
+            
+        Console.WriteLine("\nPressione qualquer tecla para encerrar...");
+        Console.ReadKey();
+        }
+    }
+}
