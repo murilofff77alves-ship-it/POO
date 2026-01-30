@@ -1,0 +1,50 @@
+namespace ATV7
+{
+    public static class Conversor
+    {
+        public static double CelsiusParaFahrenheit(double c) => (c * 9 / 5 + 32);
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("===APP MULTI-TAREFE===");
+
+            Thread tarefaFundo = new Thread(ProcessamentoPesado);
+            tarefaFundo.Start();
+
+            while(tarefaFundo.IsAlive)
+            {
+                Console.WriteLine("Digite uma temperatura em °C para converter (ou 'sair'):");
+                string input = Console.ReadLine();
+
+                if (input == "sair") break;
+
+                if (double.TryParse(input, out double celsius))
+                {
+                    double fahrenheit =  Conversor.CelsiusParaFahrenheit(celsius);
+                    Console.WriteLine($">>>{celsius}°C = {fahrenheit}°F");
+                }
+                else
+                {
+                    Console.WriteLine("Valor invalido.");
+                }
+            }
+
+            Console.WriteLine("Programa Finalizado.");
+        }
+
+        static void ProcessamentoPesado()
+        {
+            Console.WriteLine("[SYSTEM] Iniciando backup em segundo plano...");
+            for (int i = 0; i <= 100; i +=20)
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine($"\n[SYSTEM] Progresso do Backup: {i}% completado");
+                Console.WriteLine("Digite uma temperatura:");
+            }
+            Console.WriteLine("\n[SYSTEM] Backup Finalizado com Sucesso");
+        }
+    }
+}
